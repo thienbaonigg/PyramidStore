@@ -10,7 +10,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 sys.path.append('..')
 
 class Spider(Spider):
-    api,apisignkey,datasignkey = '', '' , ''
+    api,apisignkey,datasignkey,detail_type,search_data = '', '' , '','',''
+
     headers = {
         'User-Agent': 'okhttp/4.12.0',
     }
@@ -22,6 +23,8 @@ class Spider(Spider):
         else:
             arr = json.loads(ext)
             self.api = arr['api'].rstrip('/')
+            if self.api.endswith('v1.vod'):
+                self.detail_type = arr.get('detail_type','')
             self.apisignkey = arr.get('apisignkey', '')
             if self.apisignkey:
                 self.datasignkey = arr.get('datasignkey', '6QQNUsP3PkD2ajJCPCY8')
@@ -104,6 +107,8 @@ class Spider(Spider):
             path = f"/search?text={key}&pg={pg}"
         data = self.fetch(f"{self.api}{path}", headers=self.headers, verify=False).text
         data = json.loads(data[1:] if data.startswith('\ufeff') else data)
+        if self.api.endswith('v1.vod') and self.detail_type == 'search':
+            self.search_data = data
         data2 = data.get('list',data.get('data',[]))
         if 'type' in data2:
             for item in data2:
@@ -113,16 +118,22 @@ class Spider(Spider):
         return data2
 
     def detailContent(self, ids):
-        if self.api.endswith('v1.vod'):
-            path = f'/detail?vod_id={ids[0]}&rel_limit=10'
-            if self.apisignkey and self.datasignkey:
-                keytime = self.keytime()
-                path = self.datasign(f'{path}&apikey={self.apikey()}&keytime={keytime}',keytime)
+        if self.detail_type == 'search':
+            for i in self.search_data['data']['list']:
+                if str(i['vod_id']) == str(ids[0]):
+                    data = i
+                    break
         else:
-            path = f'/video_detail?id={ids[0]}'
-        data = self.fetch(f"{self.api}{path}", headers=self.headers, verify=False).text
-        data = json.loads(data[1:] if data.startswith('\ufeff') else data)
-        data = data['data']
+            if self.api.endswith('v1.vod'):
+                path = f'/detail?vod_id={ids[0]}&rel_limit=10'
+                if self.apisignkey and self.datasignkey:
+                    keytime = self.keytime()
+                    path = self.datasign(f'{path}&apikey={self.apikey()}&keytime={keytime}',keytime)
+            else:
+                path = f'/video_detail?id={ids[0]}'
+            data = self.fetch(f"{self.api}{path}", headers=self.headers, verify=False).text
+            data = json.loads(data[1:] if data.startswith('\ufeff') else data)
+            data = data['data']
         if 'vod_info' in data:
             data = data['vod_info']
         show = []
@@ -173,8 +184,10 @@ class Spider(Spider):
             data.pop('rel_vods')
         if 'type' in data:
             data.pop('type')
-        data['vod_play_from'] = '$$$'.join(show)
-        data['vod_play_url'] = '$$$'.join(vod_play_url)
+        if show:
+            data['vod_play_from'] = '$$$'.join(show)
+        if vod_play_url:
+            data['vod_play_url'] = '$$$'.join(vod_play_url)
         return {'list': [data]}
 
     def playerContent(self, flag, id, vipFlags):
@@ -259,6 +272,7 @@ class Spider(Spider):
         raw_sign_str = f"{param_str}{self.datasignkey}"
         md5_hash = hashlib.md5(raw_sign_str.encode('utf-8')).hexdigest()
         return md5_hash
+
     def localProxy(self, param):
         pass
 
