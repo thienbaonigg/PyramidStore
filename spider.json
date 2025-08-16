@@ -14,7 +14,7 @@
 		"name": "欣欣影视｜APP",
 		"type": 3,
 		"changeable": 0,
-		"api": "./欣欣影视.py"
+		"api": "./app/欣欣影视.py"
 	}, {
 		"key": "土豆浏览器 | APP",
 		"name": "土豆浏览器 | APP",
