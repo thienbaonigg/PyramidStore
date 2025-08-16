@@ -110,7 +110,7 @@ class Spider(Spider):
                     break
             except Exception:
                 continue
-        return { 'jx': jx, 'parse': '0', 'url': url, 'header': def_header}
+        return { 'jx': jx, 'parse': '0', 'url': url, 'header': header}
 
     def timestamp(self):
         return str(int(time.time() * 1000))
