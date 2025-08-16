@@ -10,6 +10,12 @@
 		"type": 3,
 		"api": "./app/懒懒视频.py"
 	}, {
+		"key": "欣欣影视｜APP",
+		"name": "欣欣影视｜APP",
+		"type": 3,
+		"changeable": 0,
+		"api": "./欣欣影视.py"
+	}, {
 		"key": "土豆浏览器 | APP",
 		"name": "土豆浏览器 | APP",
 		"type": 3,
