@@ -1,6 +1,10 @@
-import re,sys,urllib3
+# 本资源来源于互联网公开渠道，仅可用于个人学习及爬虫技术交流。
+# 严禁将其用于任何商业用途，下载后请于 24 小时内删除，搜索结果均来自源站，本人不承担任何责任。
+
+from Crypto.Cipher import AES
 from base.spider import Spider
 from urllib.parse import quote
+import re,sys,json,base64,urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 sys.path.append('..')
 
@@ -14,6 +18,8 @@ class Spider(Spider):
     def init(self, extend=''):
         ext = extend.strip()
         host = 'https://tvfun.centos.chat/app.json'
+        self.key = '505cab36b1111416'
+        self.iv = '0e832063ac451b27'
         if ext.startswith('http'):
             host = ext
         if not re.match(r'^https?://[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(:\d+)?/?$', host):
@@ -24,8 +30,12 @@ class Spider(Spider):
     def homeContent(self, filter):
         if not self.host: return None
         response = self.fetch(f'{self.host}/admin/duanjuc.php?page=1&limit=30', headers=self.headers, verify=False).json()
+        data = response['data']
+        if response.get('encrypted') == 1:
+            data_ = self.decrypt(response['data'])
+            data = json.loads(data_)['data']
         classes, videos = [], []
-        for i in response['data']:
+        for i in data:
             if i['type_id'] != 0:
                 classes.append({'type_id': i['type_id'], 'type_name': i['type_name']})
             for j in i['videos']:
@@ -41,8 +51,13 @@ class Spider(Spider):
     def categoryContent(self, tid, pg, filter, extend):
         if not self.host: return None
         response = self.fetch(f'{self.host}/admin/duanjusy.php?limit=20&page={pg}&type_id={tid}', headers=self.headers, verify=False).json()
+        data = response['data']
+        if response.get('encrypted') == 1:
+            data_ = self.decrypt(response['data'])
+            data1 = json.loads(data_)
+            data = data1['data']
         videos = []
-        for i in response['data']:
+        for i in data:
             videos.append({
                 'vod_id': i['vod_id'],
                 'vod_name': i['vod_name'],
@@ -50,13 +65,18 @@ class Spider(Spider):
                 'vod_remarks': i['vod_remarks'],
                 'vod_year': i['vod_year']
             })
-        return {'list': videos, 'pagecount': response['pagination']['total_pages']}
+        return {'list': videos, 'pagecount': data1['pagination']['total_pages']}
 
     def searchContent(self, key, quick, pg='1'):
         if not self.host: return None
         response = self.fetch(f'{self.host}/admin/duanjusy.php?suggest={key}&limit=20&page={pg}', headers=self.headers, verify=False).json()
+        data = response['data']
+        if response.get('encrypted') == 1:
+            data_ = self.decrypt(response['data'])
+            data1 = json.loads(data_)
+            data = data1['data']
         videos = []
-        for i in response['data']:
+        for i in data:
             videos.append({
                 'vod_id': i['vod_id'],
                 'vod_name': i['vod_name'],
@@ -65,11 +85,14 @@ class Spider(Spider):
                 'vod_year': i['vod_year'],
                 'vod_content': i['vod_blurb']
             })
-        return {'list': videos, 'pagecount': response['pagination']['total_pages']}
+        return {'list': videos, 'pagecount': data1['pagination']['total_pages']}
 
     def detailContent(self, ids):
         response = self.fetch(f'{self.host}/admin/duanju.php?vod_id={ids[0]}', headers=self.headers, verify=False).json()
         data = response['data']
+        if response.get('encrypted') == 1:
+            data_ = self.decrypt(response['data'])
+            data = json.loads(data_)['data']
         jiexi = data.get('jiexi','')
         if jiexi.startswith('http'):
             self.jiexi = jiexi
@@ -101,7 +124,10 @@ class Spider(Spider):
         if self.jiexi:
             try:
                 response = self.fetch(f"{self.host}/admin/jiexi.php?url={quote(raw_url, safe='')}&source={play_from}", headers=self.headers, verify=False).json()
-                play_url = response['url']
+                if response.get('encrypted') == 1:
+                    data_ = self.decrypt(response['data'])
+                    data = json.loads(data_)
+                play_url = data['url']
                 url = play_url if play_url.startswith('http') else id
                 ua = response.get('UA', default_ua)
             except Exception:
@@ -109,6 +135,17 @@ class Spider(Spider):
         else:
             url,ua = raw_url,default_ua
         return {'jx': '0','parse': '0','url': url,'header': {'User-Agent': ua}}
+
+    def decrypt(self, str):
+        key = self.key.ljust(32, '0')
+        key_bytes = key.encode('utf-8')
+        iv_bytes = self.iv.encode('utf-8')
+        ciphertext = base64.b64decode(str)
+        cipher = AES.new(key_bytes, AES.MODE_CBC, iv_bytes)
+        plaintext = cipher.decrypt(ciphertext)
+        padding_length = plaintext[-1]
+        plaintext = plaintext[:-padding_length]
+        return plaintext.decode('utf-8')
 
     def homeVideoContent(self):
         pass
