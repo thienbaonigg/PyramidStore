@@ -95,22 +95,23 @@ class Spider(Spider):
         return {'list': [data]}
 
     def playerContent(self, flag, id, vipflags):
-        def_header = {'User-Agent': ' Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/929.36 (KHTML, like Gecko) Chrome/86.0.3347.284 Safari/709.36'}
-        jx,url = 0,''
+        header = {
+            'User-Agent': ' Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/929.36 (KHTML, like Gecko) Chrome/86.0.3347.284 Safari/709.36'}
+        jx, url = 0, ''
         play_from, raw_url = id.split('@')
-        parses = self.parses.get(play_from,[])
+        parses = self.parses.get(play_from, [])
         for i in parses:
             try:
-                data = self.fetch(f'{i}{raw_url}',headers=self.headers2, verify=False).json()
-                data =  data['data']
+                data = self.fetch(f'{i}{raw_url}', headers=self.headers2, verify=False).json()
+                data = data['data']
                 play_url = data['url']
                 if play_url.startswith('http'):
                     url = play_url
-                    header = data.get('header',def_header)
+                    header = data.get('header', header)
                     break
             except Exception:
                 continue
-        return { 'jx': jx, 'parse': '0', 'url': url, 'header': header}
+        return {'jx': jx, 'parse': '0', 'url': url, 'header': header}
 
     def timestamp(self):
         return str(int(time.time() * 1000))
